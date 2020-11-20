@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">Scheduler</string>
+
+    <string name="intent_extra_task" translatable="false">task_object</string>
+
+    <string name="add_task">Add task</string>
+    <string name="edit_task">Edit task</string>
+    <string name="delete_task">Delete task</string>
+
+    <string name="task_name_label">Task name</string>
+    <string name="insert_position_label">Initial queue location</string>
+    <string name="last_complete_label">Days since last completed</string>
+    <string name="last_postponed_label">Days since last postponed</string>
+    <string name="last_default_label">Default settings will enter task at end of list</string>
+
 </resources>
