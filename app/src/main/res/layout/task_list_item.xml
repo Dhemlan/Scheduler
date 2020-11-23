@@ -14,9 +14,11 @@
         android:id="@+id/task_title_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:breakStrategy="high_quality"
         android:fontFamily="monospace"
         android:gravity="left"
-        android:textSize="30sp"
+        android:maxWidth="220dp"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -27,49 +29,79 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:gravity="center"
+        android:text="L\na\ns\nt"
+        android:layout_marginRight="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/completed_iv"
-        android:layout_marginRight="20dp"
+        app:layout_constraintEnd_toStartOf="@+id/last_attempted_ll"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="L\na\ns\nt"
-        android:text="L\na\ns\nt"/>
+        tools:text="L\na\ns\nt" />
 
     <ImageView
         android:id="@+id/completed_iv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="20dp"
+        android:background="@drawable/ic_tick"
         app:layout_constraintBottom_toBottomOf="@+id/task_lastComplete_tv"
         app:layout_constraintEnd_toStartOf="@+id/task_lastComplete_tv"
+        app:layout_constraintStart_toEndOf="@+id/last_label_tv"
         app:layout_constraintTop_toTopOf="@+id/task_lastComplete_tv" />
 
-    <ImageView
-        android:id="@+id/attempted_iv"
+    <LinearLayout
+        android:id="@+id/last_attempted_ll"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="20dp"
+        android:layout_marginHorizontal="12dp"
         app:layout_constraintBottom_toBottomOf="@+id/task_lastAttempted_tv"
         app:layout_constraintEnd_toStartOf="@+id/task_lastAttempted_tv"
-        app:layout_constraintTop_toTopOf="@+id/task_lastAttempted_tv" />
+        app:layout_constraintTop_toTopOf="@+id/task_lastAttempted_tv">
+
+        <ImageView
+            android:id="@+id/attempted_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_clock"
+            app:layout_constraintBottom_toBottomOf="@+id/task_lastAttempted_tv"
+            app:layout_constraintEnd_toStartOf="@+id/task_lastAttempted_tv"
+            app:layout_constraintTop_toTopOf="@+id/task_lastAttempted_tv" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="/"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/or_completed_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_tick"
+            app:layout_constraintBottom_toBottomOf="@+id/task_lastAttempted_tv"
+            app:layout_constraintEnd_toStartOf="@+id/task_lastAttempted_tv"
+            app:layout_constraintTop_toTopOf="@+id/task_lastAttempted_tv" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/task_lastComplete_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minWidth="40dp"
+        android:gravity="left"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="12 Dec"
+
         android:layout_marginBottom="8dp"/>
 
     <TextView
         android:id="@+id/task_lastAttempted_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minWidth="40dp"
         android:layout_marginTop="8dp"
+        android:gravity="left"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/task_lastComplete_tv"
         app:layout_constraintTop_toBottomOf="@+id/task_lastComplete_tv"
-        tools:text="12 Dec" />
+        tools:text="1 day" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

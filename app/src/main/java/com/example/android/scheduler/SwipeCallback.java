@@ -27,7 +27,7 @@ public class SwipeCallback extends ItemTouchHelper.SimpleCallback {
             mAdaptor.taskCompleted(pos,viewHolder);
         }
         else if (direction == ItemTouchHelper.LEFT){
-            mAdaptor.taskPostponed(pos);
+            mAdaptor.taskCompleted(pos, viewHolder);
         }
     }
 }

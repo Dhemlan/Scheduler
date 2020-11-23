@@ -10,6 +10,8 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.ArrayList;
 
 
@@ -42,7 +44,6 @@ public class EditTaskActivity extends AppCompatActivity {
         mLastCompletedPicker.setValue((int) mCurTask.daysSinceLastCompleted());
         mLastPostponedPicker.setValue((int) mCurTask.daysSinceLastPostponed());
 
-
         mEditTaskButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -64,10 +65,17 @@ public class EditTaskActivity extends AppCompatActivity {
         mDeleteTaskButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                mTaskList.remove(mCurTask);
-                SchedulerPrefs.storeTaskList(mTaskList, getApplicationContext());
-                Toast.makeText(EditTaskActivity.this, "Task deleted", Toast.LENGTH_SHORT).show();
-                finish();
+                Snackbar snackbar = Snackbar
+                        .make(v, R.string.confirm_delete, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.delete_label, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                mTaskList.remove(mCurTask);
+                                SchedulerPrefs.storeTaskList(mTaskList, getApplicationContext());
+                                finish();
+                            }
+                        });
+                snackbar.show();
             }
         });
 }

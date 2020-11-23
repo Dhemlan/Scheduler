@@ -1,6 +1,7 @@
 package com.example.android.scheduler;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,15 +47,34 @@ public class ScheduleAdaptor extends RecyclerView.Adapter<ScheduleAdaptor.TaskVi
         mTasks.add(completed);
         notifyItemInserted(mTasks.size()-1);
         SchedulerPrefs.storeTaskList(mTasks, mContext);
-        showUndoSnackbar(viewHolder);
+        showCompletedSnackbar(viewHolder);
     }
 
-    public void taskPostponed(int pos){
-        notifyItemRemoved(pos);
+    public void taskPostponed(int pos, RecyclerView.ViewHolder viewHolder){
+        showPostponedSnackbar(viewHolder);
     }
 
-    public void showUndoSnackbar(RecyclerView.ViewHolder viewHolder){
-        Snackbar.make(viewHolder.itemView, "Snackbar!", Snackbar.LENGTH_LONG)
+    public void showCompletedSnackbar(RecyclerView.ViewHolder viewHolder){
+        Snackbar.make(viewHolder.itemView, R.string.task_completed, Snackbar.LENGTH_LONG)
+                .setAction(R.string.undo_label, new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                })
+                .setDuration(5000)
+                .show();
+    }
+
+    public void showPostponedSnackbar(RecyclerView.ViewHolder viewHolder){
+        Snackbar.make(viewHolder.itemView, R.string.task_postponed, Snackbar.LENGTH_LONG)
+                .setAction(R.string.undo_label, new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                })
+                .setDuration(5000)
                 .show();
     }
 
@@ -96,10 +116,19 @@ public class ScheduleAdaptor extends RecyclerView.Adapter<ScheduleAdaptor.TaskVi
             taskView.setOnClickListener(this);
         }
 
+
+        //TODO refactor computation out of bind?
         void bind (Task task){
             mTaskTitleText.setText(task.getTitle());
-            mCompletedDateText.setText(String.valueOf(task.daysSinceLastCompleted()) + " days");
-            mAttemptedDateText.setText(String.valueOf(task.daysSinceLastAttempt()) + " days");
+            int lastCompleted = task.daysSinceLastCompleted();
+            Resources res = mContext.getResources();
+
+            if (lastCompleted == 0){ mCompletedDateText.setText(R.string.today_label);}
+            else{ mCompletedDateText.setText(res.getQuantityString(R.plurals.numberOfDays, lastCompleted, lastCompleted));}
+
+            int lastAttempted = task.daysSinceLastAttempt();
+            if (lastAttempted == 0){ mAttemptedDateText.setText(R.string.today_label);}
+            else{ mAttemptedDateText.setText(res.getQuantityString(R.plurals.numberOfDays, lastAttempted, lastAttempted));}
         }
 
         @Override

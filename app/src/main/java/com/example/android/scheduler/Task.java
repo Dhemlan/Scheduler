@@ -25,11 +25,11 @@ public class Task implements Serializable {
         return title;
     }
 
-    public long daysSinceLastAttempt() {
+    public int daysSinceLastAttempt() {
         return SchedulerUtils.calcDaysAgo(Math.max(lastCompleted, lastPostponed));
     }
 
-    public long daysSinceLastCompleted() {
+    public int daysSinceLastCompleted() {
         return SchedulerUtils.calcDaysAgo(lastCompleted);
     }
 
