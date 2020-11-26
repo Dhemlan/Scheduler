@@ -14,9 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 
 
@@ -65,10 +62,16 @@ public class MainActivity extends AppCompatActivity implements ScheduleAdaptor.L
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+    protected void onResume() {
+        super.onResume();
         mTaskList = SchedulerPrefs.retrieveTaskList(this);
         mAdaptor.setmTasks(mTaskList);
         mAdaptor.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
     }
 
     @Override

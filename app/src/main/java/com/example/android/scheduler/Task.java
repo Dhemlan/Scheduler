@@ -43,4 +43,8 @@ public class Task implements Serializable {
 
     public void setTitle(String newTitle){ title = newTitle;}
 
+    public long getLastCompleted() {return lastCompleted;}
+
+    public long getLastPostponed() {return lastPostponed;}
+
 }

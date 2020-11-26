@@ -1,8 +1,11 @@
 package com.example.android.scheduler;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,20 +42,41 @@ public class AddTaskActivity extends AppCompatActivity {
         mAddTaskButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                String taskName = mTaskNameEditText.getText().toString();
-                if (taskName.equals("")){
-                    Toast.makeText(AddTaskActivity.this, "Task name cannot be blank", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                mTaskList.add(new Task(taskName, SchedulerUtils.calcLastDate(mLastCompletedPicker.getValue()),
-                        SchedulerUtils.calcLastDate(mLastPostponedPicker.getValue())));
-                SchedulerPrefs.storeTaskList(mTaskList, getApplicationContext());
-                Toast.makeText(AddTaskActivity.this, "Task added", Toast.LENGTH_SHORT).show();
-                finish();
+                addQuestion();
             }
         });
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+            if (item.getItemId() == R.id.menu_add_task){
+                addQuestion();
+            }
+        return super.onOptionsItemSelected(item);
+    }
 
+    public void addQuestion(){
+        String taskName = mTaskNameEditText.getText().toString();
+        if (taskName.equals("")){
+            Toast.makeText(AddTaskActivity.this, R.string.task_name_not_blank_label, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        long lastCompleted = SchedulerUtils.calcLastDate(mLastCompletedPicker.getValue());
+        if (lastCompleted == 0){
+            mTaskList.add(new Task(taskName, lastCompleted, 0));
+        }
+        else {
+            SchedulerUtils.updateList(mTaskList, new Task(taskName, lastCompleted,
+                    SchedulerUtils.calcLastDate(mLastPostponedPicker.getValue())));
+        }
+        SchedulerPrefs.storeTaskList(mTaskList, getApplicationContext());
+        Toast.makeText(AddTaskActivity.this, R.string.task_added, Toast.LENGTH_SHORT).show();
+        finish();
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.add_task, menu);
+        return true;
+    }
 }

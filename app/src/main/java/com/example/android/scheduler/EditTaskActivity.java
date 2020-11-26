@@ -1,9 +1,12 @@
 package com.example.android.scheduler;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,18 +50,7 @@ public class EditTaskActivity extends AppCompatActivity {
         mEditTaskButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                String taskName = mTaskNameEditText.getText().toString();
-                if (taskName.equals("")){
-                    Toast.makeText(EditTaskActivity.this, "Task name cannot be blank", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                mCurTask.setTitle(taskName);
-                mCurTask.setLastCompleted(SchedulerUtils.calcLastDate(mLastCompletedPicker.getValue()));
-                mCurTask.setLastPostponed(SchedulerUtils.calcLastDate(mLastPostponedPicker.getValue()));
-
-                SchedulerPrefs.storeTaskList(mTaskList, getApplicationContext());
-                Toast.makeText(EditTaskActivity.this, "Task edited", Toast.LENGTH_SHORT).show();
-                finish();
+                editQuestion();
             }
         });
 
@@ -78,5 +70,36 @@ public class EditTaskActivity extends AppCompatActivity {
                 snackbar.show();
             }
         });
-}
+    }
+
+    public void editQuestion(){
+        String taskName = mTaskNameEditText.getText().toString();
+        if (taskName.equals("")){
+            Toast.makeText(EditTaskActivity.this, R.string.task_name_not_blank_label, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        mCurTask.setTitle(taskName);
+        mCurTask.setLastCompleted(SchedulerUtils.calcLastDate(mLastCompletedPicker.getValue()));
+        mCurTask.setLastPostponed(SchedulerUtils.calcLastDate(mLastPostponedPicker.getValue()));
+
+        SchedulerUtils.updateList(mTaskList, mCurTask);
+
+        SchedulerPrefs.storeTaskList(mTaskList, getApplicationContext());
+        Toast.makeText(EditTaskActivity.this, R.string.task_edited, Toast.LENGTH_SHORT).show();
+        finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.menu_edit_task){
+            editQuestion();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.edit_task, menu);
+        return true;
+    }
 }

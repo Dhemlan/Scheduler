@@ -41,37 +41,55 @@ public class ScheduleAdaptor extends RecyclerView.Adapter<ScheduleAdaptor.TaskVi
 
     public void taskCompleted(int pos, RecyclerView.ViewHolder viewHolder){
         Task completed = mTasks.get(pos);
+        long prevCompletedDate = completed.getLastCompleted();
         completed.setLastCompleted(TimeUnit.MILLISECONDS.toDays(System.currentTimeMillis()));
         mTasks.remove(pos);
         notifyItemRemoved(pos);
         mTasks.add(completed);
         notifyItemInserted(mTasks.size()-1);
         SchedulerPrefs.storeTaskList(mTasks, mContext);
-        showCompletedSnackbar(viewHolder);
+        showCompletedSnackbar(viewHolder, completed, pos, prevCompletedDate);
     }
 
-    public void taskPostponed(int pos, RecyclerView.ViewHolder viewHolder){
-        showPostponedSnackbar(viewHolder);
-    }
-
-    public void showCompletedSnackbar(RecyclerView.ViewHolder viewHolder){
+    public void showCompletedSnackbar(RecyclerView.ViewHolder viewHolder, Task completed, int pos, long prevCompletedDate){
         Snackbar.make(viewHolder.itemView, R.string.task_completed, Snackbar.LENGTH_LONG)
                 .setAction(R.string.undo_label, new View.OnClickListener(){
                     @Override
                     public void onClick(View v) {
+                        notifyItemRemoved(mTasks.size() - 1);
+                        mTasks.remove(mTasks.size() - 1);
 
+                        completed.setLastCompleted(prevCompletedDate);
+                        mTasks.add(pos, completed);
+                        notifyItemInserted(pos);
+                        SchedulerPrefs.storeTaskList(mTasks, mContext);
                     }
                 })
                 .setDuration(5000)
                 .show();
     }
 
-    public void showPostponedSnackbar(RecyclerView.ViewHolder viewHolder){
+    public void taskPostponed(int pos, RecyclerView.ViewHolder viewHolder){
+        Task postponed = mTasks.get(pos);
+        long prevPostponedDate = postponed.getLastPostponed();
+        postponed.setLastPostponed(TimeUnit.MILLISECONDS.toDays(System.currentTimeMillis()));
+        notifyItemRemoved(pos);
+        notifyItemInserted(SchedulerUtils.updateList(mTasks, postponed));
+        SchedulerPrefs.storeTaskList(mTasks, mContext);
+        showPostponedSnackbar(viewHolder, postponed, pos, prevPostponedDate);
+    }
+
+    public void showPostponedSnackbar(RecyclerView.ViewHolder viewHolder, Task postponed, int pos, long prevPostponedDate){
         Snackbar.make(viewHolder.itemView, R.string.task_postponed, Snackbar.LENGTH_LONG)
                 .setAction(R.string.undo_label, new View.OnClickListener(){
                     @Override
                     public void onClick(View v) {
-
+                        postponed.setLastPostponed(prevPostponedDate);
+                        notifyItemRemoved(mTasks.indexOf(postponed));
+                        mTasks.remove(postponed);
+                        mTasks.add(pos, postponed);
+                        notifyItemInserted(pos);
+                        SchedulerPrefs.storeTaskList(mTasks, mContext);
                     }
                 })
                 .setDuration(5000)

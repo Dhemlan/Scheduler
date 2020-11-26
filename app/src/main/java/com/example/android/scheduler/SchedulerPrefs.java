@@ -27,6 +27,7 @@ public class SchedulerPrefs {
                 .getDefaultSharedPreferences(context);
         Gson gson = new Gson();
         String json = appSharedPrefs.getString("taskList", "");
+        if (json.length() == 0) return new ArrayList<Task>();
         Type type = new TypeToken<ArrayList<Task>>(){}.getType();
         ArrayList<Task> taskList = gson.fromJson(json, type);
         return taskList;
