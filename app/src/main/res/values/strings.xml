@@ -7,7 +7,6 @@
     <string name="edit_task">Edit task</string>
     <string name="delete_task">Delete task</string>
 
-
     <string name="confirm_delete">Are you sure?</string>
     <string name="task_name_not_blank_label">Task name cannot be blank</string>
 
@@ -25,6 +24,7 @@
     <string name="last_complete_label">Days since last completed</string>
     <string name="last_postponed_label">Days since last postponed</string>
     <string name="last_default_label">Default settings will enter task at end of list</string>
+    <string name="last_5_label">Last 5: </string>
 
     <plurals name="numberOfDays">
         <item quantity="one">%d day</item>

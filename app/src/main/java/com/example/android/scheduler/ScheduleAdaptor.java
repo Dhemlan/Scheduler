@@ -2,25 +2,17 @@ package com.example.android.scheduler;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 
-import org.w3c.dom.Text;
-
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class ScheduleAdaptor extends RecyclerView.Adapter<ScheduleAdaptor.TaskViewHolder> {
@@ -46,6 +38,8 @@ public class ScheduleAdaptor extends RecyclerView.Adapter<ScheduleAdaptor.TaskVi
         mTasks.remove(pos);
         notifyItemRemoved(pos);
         mTasks.add(completed);
+        completed.updateHistory(1);
+
         notifyItemInserted(mTasks.size()-1);
         SchedulerPrefs.storeTaskList(mTasks, mContext);
         showCompletedSnackbar(viewHolder, completed, pos, prevCompletedDate);
@@ -58,6 +52,7 @@ public class ScheduleAdaptor extends RecyclerView.Adapter<ScheduleAdaptor.TaskVi
                     public void onClick(View v) {
                         notifyItemRemoved(mTasks.size() - 1);
                         mTasks.remove(mTasks.size() - 1);
+                        completed.updateHistoryUndo();
 
                         completed.setLastCompleted(prevCompletedDate);
                         mTasks.add(pos, completed);
@@ -73,6 +68,8 @@ public class ScheduleAdaptor extends RecyclerView.Adapter<ScheduleAdaptor.TaskVi
         Task postponed = mTasks.get(pos);
         long prevPostponedDate = postponed.getLastPostponed();
         postponed.setLastPostponed(TimeUnit.MILLISECONDS.toDays(System.currentTimeMillis()));
+        postponed.updateHistory(0);
+
         notifyItemRemoved(pos);
         notifyItemInserted(SchedulerUtils.updateList(mTasks, postponed));
         SchedulerPrefs.storeTaskList(mTasks, mContext);
@@ -88,6 +85,7 @@ public class ScheduleAdaptor extends RecyclerView.Adapter<ScheduleAdaptor.TaskVi
                         notifyItemRemoved(mTasks.indexOf(postponed));
                         mTasks.remove(postponed);
                         mTasks.add(pos, postponed);
+                        postponed.updateHistoryUndo();
                         notifyItemInserted(pos);
                         SchedulerPrefs.storeTaskList(mTasks, mContext);
                     }
@@ -120,8 +118,7 @@ public class ScheduleAdaptor extends RecyclerView.Adapter<ScheduleAdaptor.TaskVi
 
     class TaskViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView mTaskTitleText;
-        ImageView mCompletedImage;
-        ImageView mPostponedImage;
+        ArrayList<ImageView> mLast5Images = new ArrayList<ImageView>();
         TextView mCompletedDateText;
         TextView mAttemptedDateText;
 
@@ -130,6 +127,11 @@ public class ScheduleAdaptor extends RecyclerView.Adapter<ScheduleAdaptor.TaskVi
             mTaskTitleText = (TextView) taskView.findViewById(R.id.task_title_tv);
             mCompletedDateText = (TextView) taskView.findViewById(R.id.task_lastComplete_tv);
             mAttemptedDateText = (TextView) taskView.findViewById(R.id.task_lastAttempted_tv);
+            mLast5Images.add((ImageView) taskView.findViewById(R.id.last5_iv1));
+            mLast5Images.add((ImageView) taskView.findViewById(R.id.last5_iv2));
+            mLast5Images.add((ImageView) taskView.findViewById(R.id.last5_iv3));
+            mLast5Images.add((ImageView) taskView.findViewById(R.id.last5_iv4));
+            mLast5Images.add((ImageView) taskView.findViewById(R.id.last5_iv5));
 
             taskView.setOnClickListener(this);
         }
@@ -147,6 +149,20 @@ public class ScheduleAdaptor extends RecyclerView.Adapter<ScheduleAdaptor.TaskVi
             int lastAttempted = task.daysSinceLastAttempt();
             if (lastAttempted == 0){ mAttemptedDateText.setText(R.string.today_label);}
             else{ mAttemptedDateText.setText(res.getQuantityString(R.plurals.numberOfDays, lastAttempted, lastAttempted));}
+            int i = 0;
+            ArrayList<Integer> history = task.getHistoryLast10();
+            for (ImageView image : mLast5Images){
+                if (history == null || history.size() <= i){
+                    break;
+                }
+                if (history.get(i) == 0){
+                    image.setBackgroundResource(R.drawable.ic_clock);
+                }
+                else {
+                    image.setBackgroundResource(R.drawable.ic_tick);
+                }
+                i++;
+            }
         }
 
         @Override

@@ -19,7 +19,6 @@
         android:gravity="left"
         android:maxWidth="220dp"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Test Task" />
@@ -102,6 +101,43 @@
         app:layout_constraintStart_toStartOf="@+id/task_lastComplete_tv"
         app:layout_constraintTop_toBottomOf="@+id/task_lastComplete_tv"
         tools:text="1 day" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginVertical="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/task_title_tv"
+        app:layout_constraintTop_toBottomOf="@+id/task_title_tv">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="4dp"
+            android:text="@string/last_5_label"
+            android:textSize="12sp"
+            android:layout_gravity="center"/>
+        <ImageView
+            android:id="@+id/last5_iv1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:id="@+id/last5_iv2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:id="@+id/last5_iv3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:id="@+id/last5_iv4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:id="@+id/last5_iv5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
