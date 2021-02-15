@@ -6,4 +6,3 @@ of aged care resident exercise session (particularly unavailability or declined 
 ## Technologies
 * Android Studio
 * Java
-* SQLite/Room
